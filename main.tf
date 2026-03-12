@@ -14,16 +14,14 @@ provider "aws" {
 module "spacelift_workerpool" {
   source = "github.com/spacelift-io/terraform-aws-spacelift-workerpool-on-ec2?ref=v5.5.0"
 
-  worker_pool_id          = var.worker_pool_id
-  worker_pool_config      = var.worker_pool_config
-  worker_pool_private_key = var.worker_pool_private_key
+  secure_env_vars = {
+    SPACELIFT_TOKEN            = var.worker_pool_config
+    SPACELIFT_POOL_PRIVATE_KEY = var.worker_pool_private_key
+  }
 
-  vpc_id     = var.vpc_id
-  subnet_ids = var.subnet_ids
-
-  min_size         = 1
-  max_size         = 2
-  desired_capacity = 1
-
-  instance_type = "t3.small"
+  min_size        = 1
+  max_size        = 2
+  worker_pool_id  = var.worker_pool_id
+  security_groups = var.security_groups
+  vpc_subnets     = var.vpc_subnets
 }
